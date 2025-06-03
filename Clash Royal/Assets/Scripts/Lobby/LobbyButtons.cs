@@ -21,6 +21,7 @@ public class LobbyButtons : MonoBehaviour
     {
         
         SceneManager.LoadScene(1);
+        SoundManager.Instance.Play(Sounds.ButtonClick);
     }
 
 
@@ -28,5 +29,6 @@ public class LobbyButtons : MonoBehaviour
     {
         
         SceneManager.LoadScene(2);
+        SoundManager.Instance.Play(Sounds.ButtonClick);
     }
 }
