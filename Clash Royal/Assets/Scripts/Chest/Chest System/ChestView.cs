@@ -38,6 +38,8 @@ public class ChestView : MonoBehaviour, IChestObserver
         timerText.text = "Locked"; // We update this only when unlock starts
 
         // Optionally attach model reference to the UI if needed later
-        chestUI.AddComponent<ChestUIRuntime>().Init(model, timerText);
+        //chestUI.AddComponent<ChestUIRuntime>().Init(model, timerText);
+
+        chestUI.GetComponent<ChestUIRuntime>().Init(model, timerText);
     }
 }

@@ -77,5 +77,6 @@ public enum Sounds
     Music,
     collectItem,
     SoldItem,
-    Popup
+    Popup,
+    Warning
 }

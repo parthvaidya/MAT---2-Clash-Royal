@@ -18,4 +18,4 @@ MonoBehaviour:
   maxCoins: 500
   minGems: 20
   maxGems: 40
-  unlockTimeMinutes: 30
+  unlockTimeMinutes: 4

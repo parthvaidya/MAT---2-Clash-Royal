@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,75 +7,33 @@ public class ChestController : MonoBehaviour
 {
     [SerializeField] private ChestDataSO[] chestTypes;
     [SerializeField] private Transform chestSlotParent;
+    [SerializeField] private PlayerUI playerUI;
+
+    [SerializeField] private GameObject slotsFullMessage;
+    [SerializeField] private GameObject noSlotMessage;
 
     private List<ChestModel> chests = new();
     private ChestSubject subject;
     private int maxSlots = 4;
     private HashSet<string> spawnedChestNames = new();
+
+    public int playerGems = 100;
+    private Stack<ICommand> commandStack = new();
     void Awake()
     {
         subject = new ChestSubject();
         ServiceLocator.Register(subject);
     }
 
-    //public void SpawnChest()
-    //{
-    //    if (chests.Count >= maxSlots)
-    //    {
-    //        Debug.Log("All slots full!");
-    //        return;
-    //    }
-
-    //    var emptySlotIndex = GetEmptySlotIndex();
-    //    if (emptySlotIndex == -1)
-    //    {
-    //        Debug.Log("No empty slot available!");
-    //        return;
-    //    }
-
-    //    var randomChest = chestTypes[UnityEngine.Random.Range(0, chestTypes.Length)];
-    //    var chest = new ChestModel
-    //    {
-    //        chestData = randomChest,
-    //        unlockDuration = TimeSpan.FromMinutes(randomChest.unlockTimeMinutes)
-    //    };
-    //    chest.GenerateRewards();
-
-    //    chests.Add(chest);
-    //    subject.Notify(chest, emptySlotIndex);
-    //}
-
-    //private int GetEmptySlotIndex()
-    //{
-    //    for (int i = 0; i < chestSlotParent.childCount; i++)
-    //    {
-    //        var slot = chestSlotParent.GetChild(i);
-
-    //        // Check if slot has only 1 child (the placeholder Image component, or the slot itself)
-    //        if (slot.childCount == 0)
-    //            return i;
-
-    //        // If child is NOT a chest prefab (optional)
-    //        bool hasChest = false;
-    //        foreach (Transform child in slot)
-    //        {
-    //            if (child.CompareTag("ChestUI"))
-    //            {
-    //                hasChest = true;
-    //                break;
-    //            }
-    //        }
-
-    //        if (!hasChest)
-    //            return i;
-    //    }
-    //    return -1;
-    //}
-
+    
     public void SpawnChest()
     {
+        SoundManager.Instance.Play(Sounds.ButtonClick);
         if (chests.Count >= maxSlots)
         {
+            SoundManager.Instance.Play(Sounds.Warning);
+            StartCoroutine(ShowMessageTemporarily(slotsFullMessage));
+            
             Debug.Log("All slots full!");
             return;
         }
@@ -82,6 +41,8 @@ public class ChestController : MonoBehaviour
         var emptySlotIndex = GetEmptySlotIndex();
         if (emptySlotIndex == -1)
         {
+            SoundManager.Instance.Play(Sounds.Warning);
+            StartCoroutine(ShowMessageTemporarily(noSlotMessage));
             Debug.Log("No empty slot available!");
             return;
         }
@@ -119,6 +80,12 @@ public class ChestController : MonoBehaviour
         subject.Notify(chestModel, emptySlotIndex);
     }
 
+    private IEnumerator ShowMessageTemporarily(GameObject messageGO, float duration = 3f)
+    {
+        messageGO.SetActive(true);
+        yield return new WaitForSeconds(duration);
+        messageGO.SetActive(false);
+    }
     private int GetEmptySlotIndex()
     {
         for (int i = 0; i < chestSlotParent.childCount; i++)
@@ -144,5 +111,42 @@ public class ChestController : MonoBehaviour
                 return i;
         }
         return -1;
+    }
+
+    public void RemoveChest(ChestModel chest)
+    {
+        if (chests.Contains(chest))
+        {
+            chests.Remove(chest);
+        }
+    }
+    public bool IsAnyChestUnlocking()
+    {
+        return chests.Exists(c => c.chestState == ChestState.Unlocking);
+    }
+
+    public void StartUnlockTimer(ChestModel chest)
+    {
+        if (IsAnyChestUnlocking())
+        {
+            Debug.Log("Only one chest can be unlocking at a time!");
+            return;
+        }
+
+        chest.chestState = ChestState.Unlocking;
+        chest.unlockStartTime = System.DateTime.Now;
+    }
+
+    public void TryUnlockWithGems(ChestModel chest)
+    {
+        var cmd = new UnlockWithGemsCommand(chest, this , playerUI);
+        cmd.Execute();
+        commandStack.Push(cmd);
+    }
+
+    public void UndoLastCommand()
+    {
+        if (commandStack.Count > 0)
+            commandStack.Pop().Undo();
     }
 }
