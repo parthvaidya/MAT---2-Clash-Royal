@@ -31,15 +31,12 @@ public class ChestView : MonoBehaviour, IChestObserver
         var gemText = chestUI.transform.Find("GemText").GetComponent<TextMeshProUGUI>();
         var timerText = chestUI.transform.Find("TimerText").GetComponent<TextMeshProUGUI>();
 
+
         // Bind data
         image.sprite = model.chestData.chestSprite;
         coinText.text = $"Coins: {model.generatedCoins}";
         gemText.text = $"Gems: {model.generatedGems}";
         timerText.text = "Locked"; // We update this only when unlock starts
-
-        // Optionally attach model reference to the UI if needed later
-        //chestUI.AddComponent<ChestUIRuntime>().Init(model, timerText);
-
         chestUI.GetComponent<ChestUIRuntime>().Init(model, timerText);
     }
 }

@@ -19,3 +19,4 @@ MonoBehaviour:
   minGems: 80
   maxGems: 100
   unlockTimeMinutes: 3
+  gemCost: 100

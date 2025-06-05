@@ -9,8 +9,8 @@ public class ChestUIRuntime : MonoBehaviour
 {
     private ChestModel model;
     [SerializeField]private TextMeshProUGUI timerText;
-    
 
+    public ChestModel Model => model;
     private bool isInitialized;
 
    
@@ -70,43 +70,6 @@ public class ChestUIRuntime : MonoBehaviour
     }
 
 
-    //private void ShowPopup()
-    //{
-    //    if (model.chestState == ChestState.Unlocked)
-    //    {
-    //        // Give rewards
-    //        PlayerData.Instance.Coins += model.generatedCoins;
-    //        PlayerData.Instance.Gems += model.generatedGems;
-    //        model.chestState = ChestState.Collected;
-
-    //        SoundManager.Instance.Play(Sounds.SoldItem);
-
-    //        // Update global UI
-    //        FindObjectOfType<PlayerUI>().UpdateUI();
-
-    //        // Show chest text
-    //        timerText.text = "Collected!";
-
-    //        //  Dynamically find reward message text inside prefab
-    //        var rewardMessageText = transform.Find("RewardMessageText")?.GetComponent<TextMeshProUGUI>();
-
-    //        if (rewardMessageText != null)
-    //        {
-    //            rewardMessageText.text = $"+{model.generatedCoins} Coins\n+{model.generatedGems} Gems";
-    //            rewardMessageText.gameObject.SetActive(true);
-    //            StartCoroutine(HideAndDestroyChest(rewardMessageText.gameObject, 2.5f));
-    //        }
-    //        else
-    //        {
-    //            // Fallback: just destroy if message not found
-    //            Destroy(this.gameObject);
-    //        }
-    //    }
-    //    else if (model.chestState == ChestState.Locked)
-    //    {
-    //        FindObjectOfType<ChestPopupView>().Show(model);
-    //    }
-    //}
 
     private void ShowPopup()
     {
@@ -156,5 +119,11 @@ public class ChestUIRuntime : MonoBehaviour
         yield return new WaitForSeconds(delay);
         messageGO.SetActive(false);
         Destroy(this.gameObject);
+    }
+
+    public void ForceRefresh()
+    {
+        Debug.Log($"ForceRefresh called. ChestState: {model.chestState}");
+        UpdateTimerText();
     }
 }

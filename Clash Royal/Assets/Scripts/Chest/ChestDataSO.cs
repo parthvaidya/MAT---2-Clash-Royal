@@ -12,4 +12,5 @@ public class ChestDataSO : ScriptableObject
     public int minGems;
     public int maxGems;
     public float unlockTimeMinutes;
+    public int gemCost;
 }

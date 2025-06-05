@@ -25,6 +25,8 @@ public class ChestController : MonoBehaviour
         ServiceLocator.Register(subject);
     }
 
+
+
     
     public void SpawnChest()
     {
@@ -144,9 +146,35 @@ public class ChestController : MonoBehaviour
         commandStack.Push(cmd);
     }
 
+    //public void UndoLastCommand()
+    //{
+    //    if (commandStack.Count > 0)
+    //        commandStack.Pop().Undo();
+    //}
+
     public void UndoLastCommand()
     {
+        Debug.Log("Undo button clicked");  // Add this line
+
         if (commandStack.Count > 0)
-            commandStack.Pop().Undo();
+        {
+            ICommand lastCommand = commandStack.Pop();
+            lastCommand.Undo();
+
+            foreach (Transform slot in chestSlotParent)
+            {
+                var chestUI = slot.GetComponentInChildren<ChestUIRuntime>();
+                if (chestUI != null && chestUI.Model != null)  // <-- check if model exists
+                {
+                    Debug.Log($"ChestUI Model in slot {slot.name} is {(chestUI.Model == null ? "null" : "valid")}");
+                    chestUI.ForceRefresh();
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("No command to undo");
+        }
     }
+
 }
