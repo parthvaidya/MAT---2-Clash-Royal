@@ -109,35 +109,8 @@ public class ChestController : MonoBehaviour
 
             if (!hasChest)
                 return i;
-
-            Debug.Log("Destroyed chest, checking for slot availability...");
-            Debug.Log($"Slot {i} has {slot.childCount} children.");
         }
         return -1;
-    }
-
-    public void SpawnChestAgain(ChestModel chest)
-    {
-        if (chests.Count >= maxSlots)
-        {
-            Debug.Log("No empty slots available to re-spawn chest.");
-            return;
-        }
-
-        var emptySlotIndex = GetEmptySlotIndex();
-        if (emptySlotIndex == -1)
-        {
-            Debug.Log("No empty slot found.");
-            return;
-        }
-
-        chests.Add(chest);
-        subject.Notify(chest, emptySlotIndex);
-    }
-
-    public void PushCommand(ICommand cmd)
-    {
-        commandStack.Push(cmd);
     }
 
     public void RemoveChest(ChestModel chest)

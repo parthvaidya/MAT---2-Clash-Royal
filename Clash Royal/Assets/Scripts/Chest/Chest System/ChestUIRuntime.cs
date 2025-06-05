@@ -9,20 +9,19 @@ public class ChestUIRuntime : MonoBehaviour
 {
     private ChestModel model;
     [SerializeField]private TextMeshProUGUI timerText;
-    private ChestController controller;
-    private PlayerUI playerUI;
+    
 
     private bool isInitialized;
 
-    public void Init(ChestModel model, TextMeshProUGUI timerText, ChestController controller, PlayerUI playerUI)
+   
+
+    public void Init(ChestModel model, TextMeshProUGUI timerText)
     {
         this.model = model;
         this.timerText = timerText;
-        this.controller = controller;
-        this.playerUI = playerUI;
         isInitialized = true;
-
         UpdateTimerText();
+
         GetComponent<Button>().onClick.AddListener(ShowPopup);
     }
 
@@ -71,7 +70,6 @@ public class ChestUIRuntime : MonoBehaviour
     }
 
 
-
     //private void ShowPopup()
     //{
     //    if (model.chestState == ChestState.Unlocked)
@@ -86,18 +84,12 @@ public class ChestUIRuntime : MonoBehaviour
     //        // Update global UI
     //        FindObjectOfType<PlayerUI>().UpdateUI();
 
-    //        // Remove chest model from controller list
-    //        var chestController = FindObjectOfType<ChestController>();
-    //        if (chestController != null)
-    //        {
-    //            chestController.RemoveChest(model); // <== You need to create this method
-    //        }
-
     //        // Show chest text
     //        timerText.text = "Collected!";
 
-    //        // Show reward message if available
+    //        //  Dynamically find reward message text inside prefab
     //        var rewardMessageText = transform.Find("RewardMessageText")?.GetComponent<TextMeshProUGUI>();
+
     //        if (rewardMessageText != null)
     //        {
     //            rewardMessageText.text = $"+{model.generatedCoins} Coins\n+{model.generatedGems} Gems";
@@ -106,8 +98,8 @@ public class ChestUIRuntime : MonoBehaviour
     //        }
     //        else
     //        {
-    //            //Destroy(this.gameObject);
-    //            gameObject.SetActive(false);
+    //            // Fallback: just destroy if message not found
+    //            Destroy(this.gameObject);
     //        }
     //    }
     //    else if (model.chestState == ChestState.Locked)
@@ -116,20 +108,31 @@ public class ChestUIRuntime : MonoBehaviour
     //    }
     //}
 
-
     private void ShowPopup()
     {
         if (model.chestState == ChestState.Unlocked)
         {
-            var collectCmd = new CollectChestCommand(model, controller, playerUI);
-            collectCmd.Execute();
-
-            controller.PushCommand(collectCmd); // <-- Add this helper method to ChestController
+            // Give rewards
+            PlayerData.Instance.Coins += model.generatedCoins;
+            PlayerData.Instance.Gems += model.generatedGems;
+            model.chestState = ChestState.Collected;
 
             SoundManager.Instance.Play(Sounds.SoldItem);
 
-            // Show collected message
+            // Update global UI
+            FindObjectOfType<PlayerUI>().UpdateUI();
+
+            // Remove chest model from controller list
+            var chestController = FindObjectOfType<ChestController>();
+            if (chestController != null)
+            {
+                chestController.RemoveChest(model); // <== You need to create this method
+            }
+
+            // Show chest text
             timerText.text = "Collected!";
+
+            // Show reward message if available
             var rewardMessageText = transform.Find("RewardMessageText")?.GetComponent<TextMeshProUGUI>();
             if (rewardMessageText != null)
             {
@@ -139,7 +142,7 @@ public class ChestUIRuntime : MonoBehaviour
             }
             else
             {
-                gameObject.SetActive(false);
+                Destroy(this.gameObject);
             }
         }
         else if (model.chestState == ChestState.Locked)
@@ -147,13 +150,11 @@ public class ChestUIRuntime : MonoBehaviour
             FindObjectOfType<ChestPopupView>().Show(model);
         }
     }
+
     private IEnumerator HideAndDestroyChest(GameObject messageGO, float delay)
     {
         yield return new WaitForSeconds(delay);
         messageGO.SetActive(false);
-        transform.SetParent(null);  // Detach from slot
-        Destroy(gameObject);
-
-        
+        Destroy(this.gameObject);
     }
 }

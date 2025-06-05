@@ -10,7 +10,6 @@ public class ChestModel
 
     public System.DateTime unlockStartTime;
 
-
     public void GenerateRewards()
     {
         generatedCoins = UnityEngine.Random.Range(chestData.minCoins, chestData.maxCoins);

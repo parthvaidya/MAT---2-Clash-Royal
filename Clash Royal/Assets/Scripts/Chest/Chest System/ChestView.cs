@@ -31,9 +31,6 @@ public class ChestView : MonoBehaviour, IChestObserver
         var gemText = chestUI.transform.Find("GemText").GetComponent<TextMeshProUGUI>();
         var timerText = chestUI.transform.Find("TimerText").GetComponent<TextMeshProUGUI>();
 
-        var controller = FindObjectOfType<ChestController>();
-        var playerUI = FindObjectOfType<PlayerUI>();
-
         // Bind data
         image.sprite = model.chestData.chestSprite;
         coinText.text = $"Coins: {model.generatedCoins}";
@@ -43,18 +40,6 @@ public class ChestView : MonoBehaviour, IChestObserver
         // Optionally attach model reference to the UI if needed later
         //chestUI.AddComponent<ChestUIRuntime>().Init(model, timerText);
 
-        chestUI.GetComponent<ChestUIRuntime>().Init(model, timerText,  controller, playerUI);
-    }
-
-    private void OnEnable()
-    {
-        var subject = ServiceLocator.Get<ChestSubject>();
-        subject.Register(this);
-    }
-
-    private void OnDisable()
-    {
-        var subject = ServiceLocator.Get<ChestSubject>();
-        subject.Unregister(this);
+        chestUI.GetComponent<ChestUIRuntime>().Init(model, timerText);
     }
 }
