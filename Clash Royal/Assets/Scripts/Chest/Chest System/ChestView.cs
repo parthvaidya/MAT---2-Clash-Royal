@@ -30,6 +30,7 @@ public class ChestView : MonoBehaviour, IChestObserver
         var coinText = chestUI.transform.Find("CoinText").GetComponent<TextMeshProUGUI>();
         var gemText = chestUI.transform.Find("GemText").GetComponent<TextMeshProUGUI>();
         var timerText = chestUI.transform.Find("TimerText").GetComponent<TextMeshProUGUI>();
+        var chestNameText = chestUI.transform.Find("ChestNameText").GetComponent<TextMeshProUGUI>();
 
 
         // Bind data
@@ -37,6 +38,7 @@ public class ChestView : MonoBehaviour, IChestObserver
         coinText.text = $"Coins: {model.generatedCoins}";
         gemText.text = $"Gems: {model.generatedGems}";
         timerText.text = "Locked"; // We update this only when unlock starts
+        chestNameText.text = model.chestData.chestName;
         chestUI.GetComponent<ChestUIRuntime>().Init(model, timerText);
     }
 }
