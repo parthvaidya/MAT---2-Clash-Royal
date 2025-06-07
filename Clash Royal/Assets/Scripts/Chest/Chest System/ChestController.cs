@@ -8,9 +8,9 @@ public class ChestController : MonoBehaviour
     [SerializeField] private ChestDataSO[] chestTypes;
     [SerializeField] private Transform chestSlotParent;
     [SerializeField] private PlayerUI playerUI;
-
     [SerializeField] private GameObject slotsFullMessage;
     [SerializeField] private GameObject noSlotMessage;
+    [SerializeField] private GameObject notEnoughGemsPopup;
 
     private List<ChestModel> chests = new();
     private ChestSubject subject;
@@ -146,12 +146,6 @@ public class ChestController : MonoBehaviour
         commandStack.Push(cmd);
     }
 
-    //public void UndoLastCommand()
-    //{
-    //    if (commandStack.Count > 0)
-    //        commandStack.Pop().Undo();
-    //}
-
     public void UndoLastCommand()
     {
         Debug.Log("Undo button clicked");  // Add this line
@@ -176,5 +170,8 @@ public class ChestController : MonoBehaviour
             Debug.Log("No command to undo");
         }
     }
-
+    public void ShowNotEnoughGemsPopup()
+    {
+        StartCoroutine(ShowMessageTemporarily(notEnoughGemsPopup));
+    }
 }

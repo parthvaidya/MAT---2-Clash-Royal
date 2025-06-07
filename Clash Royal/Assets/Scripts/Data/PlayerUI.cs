@@ -7,12 +7,10 @@ public class PlayerUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI coinsText;
     [SerializeField] private TextMeshProUGUI gemsText;
-
     private void Start()
     {
         UpdateUI();
     }
-
     public void UpdateUI()
     {
         coinsText.text = $"Coins: {PlayerData.Instance.Coins}";

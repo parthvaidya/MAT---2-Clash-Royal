@@ -620,6 +620,7 @@ MonoBehaviour:
   playerUI: {fileID: 228334037}
   slotsFullMessage: {fileID: 240975418}
   noSlotMessage: {fileID: 848976569}
+  notEnoughGemsPopup: {fileID: 591106789}
   playerGems: 100
 --- !u!4 &248898403
 Transform:
@@ -1147,7 +1148,7 @@ GameObject:
   m_Component:
   - component: {fileID: 591106790}
   m_Layer: 0
-  m_Name: ChestUnlockingNotification
+  m_Name: NotenoughGems
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1847,7 +1848,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Coins: 0
-  Gems: 100
+  Gems: 0
 --- !u!1 &1102487637
 GameObject:
   m_ObjectHideFlags: 0
@@ -3996,7 +3997,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: A chest is Unlocking Please wait!!!
+  m_text: Not Enough Gems availabe!!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

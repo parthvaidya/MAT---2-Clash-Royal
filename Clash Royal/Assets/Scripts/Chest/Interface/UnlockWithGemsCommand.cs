@@ -18,36 +18,7 @@ public class UnlockWithGemsCommand : ICommand
         this.playerUI = playerUI;
     }
 
-    //public void Execute()
-    //{
-    //    Debug.Log($"Execute(): Coins before {PlayerData.Instance.Coins}, Gems before {PlayerData.Instance.Gems}");
-    //    usedGems = Mathf.CeilToInt((float)chest.RemainingTime.TotalMinutes / 10f);
-    //    if (controller.playerGems < usedGems)
-    //    {
-    //        Debug.Log("Not enough gems!");
-    //        return;
-    //    }
-
-    //    controller.playerGems -= usedGems;
-    //    chest.chestState = ChestState.Unlocked;
-
-    //    PlayerData.Instance.Gems -= usedGems;
-    //    playerUI?.UpdateUI();
-    //    Debug.Log($"Execute(): Coins after {PlayerData.Instance.Coins}, Gems after {PlayerData.Instance.Gems}");
-    //}
-
-    //public void Undo()
-    //{
-    //    Debug.Log($"Undo(): Coins before restore {PlayerData.Instance.Coins}, Gems before restore {PlayerData.Instance.Gems}");
-    //    controller.playerGems += usedGems;
-    //    chest.chestState = ChestState.Locked;
-
-    //    PlayerData.Instance.Gems += usedGems;
-    //    Debug.Log("Undo(): Restoring gems and locking chest");
-    //    playerUI?.UpdateUI();
-    //    Debug.Log($"Undo(): Coins after restore {PlayerData.Instance.Coins}, Gems after restore {PlayerData.Instance.Gems}");
-    //}
-
+    
     public void Execute()
     {
         // Save original player data before changing
@@ -56,7 +27,13 @@ public class UnlockWithGemsCommand : ICommand
 
         usedGems = chest.chestData.gemCost; // or how many gems required to unlock
 
-        Debug.Log($"Execute(): Coins before {prevCoins}, Gems before {prevGems}");
+        if (PlayerData.Instance.Gems < usedGems)
+        {
+            Debug.Log("Not enough gems!");
+            SoundManager.Instance.Play(Sounds.Warning);
+            controller.ShowNotEnoughGemsPopup();
+            return;
+        }
 
         PlayerData.Instance.Gems -= usedGems;
         chest.chestState = ChestState.Unlocked;
