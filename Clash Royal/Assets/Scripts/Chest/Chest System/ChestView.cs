@@ -1,31 +1,33 @@
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ChestView : MonoBehaviour, IChestObserver
 {
+    //Initialize add UI and slot required to spawn the Chest
     [SerializeField] private GameObject chestUIPrefab;
     [SerializeField] private Transform chestSlotParent;
 
     private void Start()
     {
-        var subject = ServiceLocator.Get<ChestSubject>();
-        subject.Register(this);
+        var subject = ServiceLocator.Get<ChestSubject>(); //Get chest subject
+        subject.Register(this); //Register the service
     }
 
+    //Once the chest is spawned function
     public void OnChestSpawned(ChestModel model, int slotIndex)
     {
-        var slot = chestSlotParent.GetChild(slotIndex);
-        var chestUI = Instantiate(chestUIPrefab, slot);
+        var slot = chestSlotParent.GetChild(slotIndex); //Get slot for spawning chest
+        var chestUI = Instantiate(chestUIPrefab, slot); //Instantiate chest UI at that slot
 
+        //Ensures the prefab fills the slot properly initiazed to zero
         RectTransform rt = chestUI.GetComponent<RectTransform>();
-        rt.anchoredPosition = Vector2.zero;
+        rt.anchoredPosition = Vector2.zero; 
         rt.localScale = Vector3.one;
         rt.offsetMin = Vector2.zero;
         rt.offsetMax = Vector2.zero;
 
-        // Get components inside the prefab
+        // Get components inside the prefab 
         var image = chestUI.GetComponentInChildren<Image>();
         var coinText = chestUI.transform.Find("CoinText").GetComponent<TextMeshProUGUI>();
         var gemText = chestUI.transform.Find("GemText").GetComponent<TextMeshProUGUI>();
@@ -33,7 +35,7 @@ public class ChestView : MonoBehaviour, IChestObserver
         var chestNameText = chestUI.transform.Find("ChestNameText").GetComponent<TextMeshProUGUI>();
 
 
-        // Bind data
+        // Bind data to Sets UI values from the ChestModel and ChestDataSO
         image.sprite = model.chestData.chestSprite;
         coinText.text = $"Coins: {model.generatedCoins}";
         gemText.text = $"Gems: {model.generatedGems}";

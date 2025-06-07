@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
-    public int Coins = 100;
-    public int Gems = 100;
-    public static PlayerData Instance;
+    //initialize the coins
+    public int Coins = 0;
+    public int Gems = 0;
+    public static PlayerData Instance; //make playerdata as singleton
     private void Awake()
     {
         if (Instance == null)

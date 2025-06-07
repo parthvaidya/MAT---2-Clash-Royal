@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    private static SoundManager instance;
+    private static SoundManager instance; //create singleton
     public static SoundManager Instance { get { return instance; } }
     public SoundType[] Sounds;
     public AudioSource soundEffect;
@@ -21,10 +19,8 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-
-
     }
+
     private void Start()
     {
         PlayMusic(global::Sounds.Music);
@@ -38,8 +34,10 @@ public class SoundManager : MonoBehaviour
             soundMusic.clip = clip;
             soundMusic.Play();
         }
-
-        else { Debug.Log("Clip not found"); }
+         else 
+        { 
+            Debug.Log("Clip not found"); 
+        }
     }
 
     public void Play(Sounds sound)
@@ -49,8 +47,10 @@ public class SoundManager : MonoBehaviour
         {
             soundEffect.PlayOneShot(clip);
         }
-
-        else { Debug.Log("Clip not found"); }
+        else 
+        {
+          Debug.Log("Clip not found"); 
+        }
     }
 
     private AudioClip getSoundClip(Sounds sound)
@@ -71,6 +71,7 @@ public class SoundManager : MonoBehaviour
     }
 }
 
+//enum for type of sounds to be played
 public enum Sounds
 {
     ButtonClick,

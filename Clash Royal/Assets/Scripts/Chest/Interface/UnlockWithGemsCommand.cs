@@ -1,16 +1,16 @@
 using UnityEngine;
-
 public class UnlockWithGemsCommand : ICommand
 {
+    //Initialize 
     private ChestModel chest;
-    private int usedGems;
     private ChestController controller;
     private PlayerUI playerUI;
 
+    private int usedGems;
     private int prevCoins;
     private int prevGems;
   
-
+    //Initiaze the constructor
     public UnlockWithGemsCommand(ChestModel chest, ChestController controller, PlayerUI playerUI)
     {
         this.chest = chest;
@@ -18,15 +18,14 @@ public class UnlockWithGemsCommand : ICommand
         this.playerUI = playerUI;
     }
 
-    
     public void Execute()
     {
         // Save original player data before changing
         prevCoins = PlayerData.Instance.Coins;
         prevGems = PlayerData.Instance.Gems;
+        usedGems = chest.chestData.gemCost; // how many gems required to unlock the chest
 
-        usedGems = chest.chestData.gemCost; // or how many gems required to unlock
-
+        //Check if there are insufficient gems
         if (PlayerData.Instance.Gems < usedGems)
         {
             Debug.Log("Not enough gems!");
@@ -34,27 +33,19 @@ public class UnlockWithGemsCommand : ICommand
             controller.ShowNotEnoughGemsPopup();
             return;
         }
-
-        PlayerData.Instance.Gems -= usedGems;
-        chest.chestState = ChestState.Unlocked;
-
-        Debug.Log($"Execute(): Coins after {PlayerData.Instance.Coins}, Gems after {PlayerData.Instance.Gems}");
-
-        playerUI.UpdateUI();
+  
+        PlayerData.Instance.Gems -= usedGems; //If there are enough gems deduct them from the data 
+        chest.chestState = ChestState.Unlocked; // Update the chest state to unlocked
+        playerUI.UpdateUI(); //Update the UI
     }
 
     public void Undo()
     {
-        Debug.Log($"Undo(): Coins before restore {PlayerData.Instance.Coins}, Gems before restore {PlayerData.Instance.Gems}");
-
         // Restore exact previous values
         PlayerData.Instance.Coins = prevCoins;
         PlayerData.Instance.Gems = prevGems;
 
-        chest.chestState = ChestState.Locked;
-
-        Debug.Log($"Undo(): Coins after restore {PlayerData.Instance.Coins}, Gems after restore {PlayerData.Instance.Gems}");
-
-        playerUI.UpdateUI();
+        chest.chestState = ChestState.Locked; //Revert back to unlocked
+        playerUI.UpdateUI(); //Update UI
     }
 }

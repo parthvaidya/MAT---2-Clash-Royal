@@ -1,4 +1,5 @@
+//Observer Pattern
 public interface IChestObserver
 {
-    void OnChestSpawned(ChestModel chestModel, int slotIndex);
+   void OnChestSpawned(ChestModel chestModel, int slotIndex);
 }

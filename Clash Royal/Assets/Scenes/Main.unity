@@ -1487,6 +1487,7 @@ MonoBehaviour:
   unlockWithGemsButton: {fileID: 2006317220}
   gemCostText: {fileID: 1163505044}
   closeButton: {fileID: 2115329191}
+  chestController: {fileID: 248898402}
 --- !u!1 &759504397
 GameObject:
   m_ObjectHideFlags: 0
