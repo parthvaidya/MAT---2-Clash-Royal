@@ -13,7 +13,7 @@
 Here, click the Start button in the Lobby, and then click the Generate Chest button once chests are spawned open them.
 Based on your choice either with coins and gems or wait for the timer to open them.
 
-**Gameplay Video:**
+**Gameplay Video:** https://drive.google.com/file/d/1QpPdBOEVZDyJQ07huTUh_wJvh6P2O8NL/view?usp=sharing
 
 **Playable Link:** 
 
