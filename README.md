@@ -3,6 +3,8 @@
 -It implements key design patterns such as MVC, Command, Observer, State Machine, and Service Locator. 
 -It simulates spawning, unlocking, and collecting chests using Gems or wait timers.
 
+The Flow Diagram is as follows: https://drive.google.com/file/d/1xCAlbsJ54CSMH4qcj_UZdUlbBpNrfsWl/view?usp=sharing
+
 # Table of Contents
 1. Gameplay
 2. Features
