@@ -133,10 +133,7 @@ public class ChestController : MonoBehaviour
     //Start the unlock timer
     public void StartUnlockTimer(ChestModel chest)
     {
-        if (IsAnyChestUnlocking())
-        {
-            return;
-        }
+       
 
         chest.chestState = ChestState.Unlocking;
         chest.unlockStartTime = System.DateTime.Now;
@@ -165,7 +162,6 @@ public class ChestController : MonoBehaviour
                 var chestUI = slot.GetComponentInChildren<ChestUIRuntime>();
                 if (chestUI != null && chestUI.Model != null)  // <-- check if model exists
                 {
-                    Debug.Log($"ChestUI Model in slot {slot.name} is {(chestUI.Model == null ? "null" : "valid")}");
                     chestUI.RefreshtheUI();
                 }
             }

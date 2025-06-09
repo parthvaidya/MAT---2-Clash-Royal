@@ -1848,8 +1848,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e02a6e58f69f8641b7f47dbeeaf2ac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Coins: 0
-  Gems: 0
+  Coins: 100
+  Gems: 100
 --- !u!1 &1102487637
 GameObject:
   m_ObjectHideFlags: 0
