@@ -1,5 +1,6 @@
 using UnityEngine;
 using ChestSystem.Model;
+using ChestSystem.View;
 using ChestSystem.Utility;
 
 namespace ChestSystem.Controller
@@ -10,17 +11,19 @@ namespace ChestSystem.Controller
         private ChestModel chest;
         private ChestController controller;
         private PlayerUI playerUI;
+        private UIPopupHandler popupHandler;
 
         private int usedGems;
         private int prevCoins;
         private int prevGems;
 
         //Initiaze the constructor
-        public UnlockWithGemsCommand(ChestModel chest, ChestController controller, PlayerUI playerUI)
+        public UnlockWithGemsCommand(ChestModel chest, ChestController controller, PlayerUI playerUI , UIPopupHandler popupHandler)
         {
             this.chest = chest;
             this.controller = controller;
             this.playerUI = playerUI;
+            this.popupHandler = popupHandler;
         }
 
         public void Execute()
@@ -33,9 +36,8 @@ namespace ChestSystem.Controller
             //Check if there are insufficient gems
             if (PlayerData.Instance.Gems < usedGems)
             {
-                Debug.Log("Not enough gems!");
                 SoundManager.Instance.Play(Sounds.Warning);
-                controller.ShowNotEnoughGemsPopup();
+                popupHandler.ShowNotEnoughGemsPopup();
                 return;
             }
 

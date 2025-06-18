@@ -16,9 +16,11 @@ namespace ChestSystem.Controller
         [SerializeField] private ChestDataSO[] chestTypes;
         [SerializeField] private Transform chestSlotParent;
         [SerializeField] private PlayerUI playerUI;
-        [SerializeField] private GameObject slotsFullMessage;
-        [SerializeField] private GameObject noSlotMessage;
-        [SerializeField] private GameObject notEnoughGemsPopup;
+        [SerializeField] private UIPopupHandler popupHandler;
+
+        //[SerializeField] private GameObject slotsFullMessage;
+        //[SerializeField] private GameObject noSlotMessage;
+        //[SerializeField] private GameObject notEnoughGemsPopup;
 
         private List<ChestModel> chests = new(); //Track spawned chest
         private ChestSubject subject;
@@ -42,15 +44,15 @@ namespace ChestSystem.Controller
             if (chests.Count >= maxSlots)
             {
                 SoundManager.Instance.Play(Sounds.Warning);
-                StartCoroutine(ShowMessageTemporarily(slotsFullMessage));
+                popupHandler.ShowSlotsFullMessage();
                 return;
             }
 
             var emptySlotIndex = GetEmptySlotIndex();
             if (emptySlotIndex == -1)
             {
-                SoundManager.Instance.Play(Sounds.Warning);
-                StartCoroutine(ShowMessageTemporarily(noSlotMessage));
+                SoundManager.Instance.Play(Sounds.Warning);             
+                popupHandler.ShowNoSlotMessage();
                 return;
             }
 
@@ -85,14 +87,6 @@ namespace ChestSystem.Controller
             chestModel.GenerateRewards();
             chests.Add(chestModel);
             subject.Notify(chestModel, emptySlotIndex);
-        }
-
-        //Coroutine for the message
-        private IEnumerator ShowMessageTemporarily(GameObject messageGO, float duration = 3f)
-        {
-            messageGO.SetActive(true);
-            yield return new WaitForSeconds(duration);
-            messageGO.SetActive(false);
         }
 
         private int GetEmptySlotIndex()
@@ -140,8 +134,6 @@ namespace ChestSystem.Controller
         //Start the unlock timer
         public void StartUnlockTimer(ChestModel chest)
         {
-
-
             chest.chestState = ChestState.Unlocking;
             chest.unlockStartTime = System.DateTime.Now;
         }
@@ -149,7 +141,7 @@ namespace ChestSystem.Controller
         //Try to unlock with chest
         public void TryUnlockWithGems(ChestModel chest)
         {
-            var cmd = new UnlockWithGemsCommand(chest, this, playerUI);
+            var cmd = new UnlockWithGemsCommand(chest, this, playerUI , popupHandler);
             cmd.Execute();
             commandStack.Push(cmd);
         }
@@ -169,6 +161,7 @@ namespace ChestSystem.Controller
                     var chestUI = slot.GetComponentInChildren<ChestUIRuntime>();
                     if (chestUI != null && chestUI.Model != null)  // <-- check if model exists
                     {
+                        popupHandler.ShowUndoMessage();
                         chestUI.RefreshtheUI();
                     }
                 }
@@ -179,11 +172,6 @@ namespace ChestSystem.Controller
             }
         }
 
-        //Shows a popup message temporarily 
-        public void ShowNotEnoughGemsPopup()
-        {
-            StartCoroutine(ShowMessageTemporarily(notEnoughGemsPopup));
-        }
     }
 }
    
