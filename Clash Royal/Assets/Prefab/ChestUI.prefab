@@ -584,7 +584,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dcaa4ea51daba447b21d1fbb97999f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chestImage: {fileID: 4071982832818653040}
+  coinText: {fileID: 7795145148444813294}
+  gemText: {fileID: 4714292773821553184}
   timerText: {fileID: 5497973325222233354}
+  chestNameText: {fileID: 2309758894750447389}
 --- !u!1 &8873338149313083579
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,19 +10,32 @@ namespace ChestSystem.View
 {
     public class ChestUIRuntime : MonoBehaviour
     {
+        [Header("UI Bindings")]
+        [SerializeField] private Image chestImage;
+        [SerializeField] private TextMeshProUGUI coinText;
+        [SerializeField] private TextMeshProUGUI gemText;
         [SerializeField] private TextMeshProUGUI timerText;
+        [SerializeField] private TextMeshProUGUI chestNameText;
+
+
         private ChestModel model;
         public ChestModel Model => model; //model data required 
         private bool isInitialized;
 
         //Initialize constructor
-        public void Init(ChestModel model, TextMeshProUGUI timerText)
+        public void Init(ChestModel model)
         {
             this.model = model;
-            this.timerText = timerText;
+            chestImage.sprite = model.chestData.chestSprite;
+            coinText.text = $"Coins: {model.generatedCoins}";
+            gemText.text = $"Gems: {model.generatedGems}";
+            timerText.text = "Locked";
+            chestNameText.text = model.chestData.chestName;
             isInitialized = true;
             UpdateTimerText();
-            GetComponent<Button>().onClick.AddListener(ShowPopup); //Used Getcomponent since ChestUI prefab cannot attach button from scene
+
+            //Used Getcomponent since ChestUI prefab cannot attach button from scene
+            GetComponent<Button>().onClick.AddListener(ShowPopup); 
         }
 
         private void Update()
