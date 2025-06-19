@@ -10,6 +10,10 @@ namespace ChestSystem.State
         public void Enter(ChestModel model)
         {
             model.chestState = ChestState.Unlocked;
+            model.GenerateRewards();
+
+            // Optional: clear unlock time to avoid future negative time math
+            model.unlockStartTime = default;
         }
 
         public void Update(ChestModel model)

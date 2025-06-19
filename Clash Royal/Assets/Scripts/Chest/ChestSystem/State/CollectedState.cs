@@ -11,12 +11,12 @@ namespace ChestSystem.State
 
         public void Update(ChestModel model)
         {
-            // Nothing to update once collected
+            
         }
 
         public void OnChestTap(ChestModel model)
         {
-            // Maybe ignore or show "Already collected"
+            
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using ChestSystem.Model;
 using ChestSystem.View;
 using ChestSystem.Utility;
+using ChestSystem.State;
 
 
 namespace ChestSystem.Controller
@@ -126,10 +127,20 @@ namespace ChestSystem.Controller
         }
 
         //Start the unlock timer
+        //public void StartUnlockTimer(ChestModel chest)
+        //{
+        //    chest.chestState = ChestState.Unlocking;
+        //    chest.unlockStartTime = System.DateTime.Now;
+        //}
+
         public void StartUnlockTimer(ChestModel chest)
         {
-            chest.chestState = ChestState.Unlocking;
-            chest.unlockStartTime = System.DateTime.Now;
+            // Do nothing if the chest is already unlocking / unlocked
+            if (chest.chestState != ChestState.Locked) return;
+
+            chest.StateMachine.SetState(new UnlockingState());   
+
+            
         }
 
         //Try to unlock with chest

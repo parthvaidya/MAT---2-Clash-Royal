@@ -10,6 +10,7 @@ namespace ChestSystem.State
         public void Enter(ChestModel model)
         {
             model.chestState = ChestState.Locked;
+            Debug.Log(" Enter LockedState");
         }
 
         public void Update(ChestModel model)

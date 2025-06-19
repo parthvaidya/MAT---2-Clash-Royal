@@ -35,7 +35,8 @@ namespace ChestSystem.View
             UpdateTimerText();
 
             //Used Getcomponent since ChestUI prefab cannot attach button from scene
-            GetComponent<Button>().onClick.AddListener(ShowPopup); 
+            //GetComponent<Button>().onClick.AddListener(ShowPopup); 
+            GetComponent<Button>().onClick.AddListener(OnTap);
         }
 
         private void Update()
@@ -44,31 +45,72 @@ namespace ChestSystem.View
             if (!isInitialized || model == null || timerText == null)
                 return;
 
-            //Check if Chest is unlocking
-            if (model.chestState == ChestState.Unlocking)
-            {
-                //Calculate Remaining time
-                var timeRemaining = model.unlockStartTime + model.unlockDuration - DateTime.Now;
-                //Unlocked state
-                if (timeRemaining.TotalSeconds <= 0)
-                {
-                    model.chestState = ChestState.Unlocked;
-                    timerText.text = "Unlocked! Tap to collect";
-                }
-                else
-                {
-                    //Show countdown in seconds
-                    timerText.text = $"{Mathf.CeilToInt((float)timeRemaining.TotalSeconds)}s";
-                }
-            }
-            else
-            {
-                //Update timer text
-                UpdateTimerText();
-            }
+            ////Check if Chest is unlocking
+            //if (model.chestState == ChestState.Unlocking)
+            //{
+            //    //Calculate Remaining time
+            //    var timeRemaining = model.unlockStartTime + model.unlockDuration - DateTime.Now;
+            //    //Unlocked state
+            //    if (timeRemaining.TotalSeconds <= 0)
+            //    {
+            //        model.chestState = ChestState.Unlocked;
+            //        timerText.text = "Unlocked! Tap to collect";
+            //    }
+            //    else
+            //    {
+            //        //Show countdown in seconds
+            //        timerText.text = $"{Mathf.CeilToInt((float)timeRemaining.TotalSeconds)}s";
+            //    }
+            //}
+            //else
+            //{
+            //    //Update timer text
+            //    UpdateTimerText();
+            //}
+
+            model.StateMachine.Update();
+            UpdateTimerText();
         }
 
         //Update timerText based on Chest State
+        //private void UpdateTimerText()
+        //{
+        //    switch (model.chestState)
+        //    {
+        //        case ChestState.Locked:
+        //            timerText.text = "Locked";
+        //            break;
+        //        case ChestState.Unlocking:
+        //            var remaining = model.unlockStartTime + model.unlockDuration - DateTime.Now;
+        //            timerText.text = $"{Mathf.CeilToInt((float)remaining.TotalSeconds)}s";
+        //            break;
+        //        case ChestState.Unlocked:
+        //            timerText.text = "Unlocked! Tap to collect";
+        //            break;
+        //        case ChestState.Collected:
+        //            timerText.text = "Collected";
+        //            break;
+        //    }
+        //}
+
+        private void OnTap()
+        {
+            
+            model.StateMachine.OnTap();
+
+            
+            if (model.chestState == ChestState.Collected)
+            {
+                StartCoroutine(HideAndDestroyChest(0f));
+                return;
+            }
+
+            
+            if (model.chestState == ChestState.Locked)
+                FindObjectOfType<ChestPopupView>()?.Show(model);
+        }
+
+
         private void UpdateTimerText()
         {
             switch (model.chestState)
@@ -76,17 +118,27 @@ namespace ChestSystem.View
                 case ChestState.Locked:
                     timerText.text = "Locked";
                     break;
+
                 case ChestState.Unlocking:
-                    var remaining = model.unlockStartTime + model.unlockDuration - DateTime.Now;
-                    timerText.text = $"{Mathf.CeilToInt((float)remaining.TotalSeconds)}s";
+                    timerText.text =
+                        $"{Mathf.CeilToInt((float)model.RemainingTime.TotalSeconds)}s";
                     break;
+
                 case ChestState.Unlocked:
                     timerText.text = "Unlocked! Tap to collect";
                     break;
+
                 case ChestState.Collected:
                     timerText.text = "Collected";
                     break;
             }
+        }
+
+
+        private System.Collections.IEnumerator HideAndDestroyChest(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            Destroy(gameObject);
         }
 
         // When chest is tapped
