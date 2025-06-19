@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using ChestSystem.Model;
 using ChestSystem.View;
 using ChestSystem.Utility;
@@ -17,10 +15,6 @@ namespace ChestSystem.Controller
         [SerializeField] private Transform chestSlotParent;
         [SerializeField] private PlayerUI playerUI;
         [SerializeField] private UIPopupHandler popupHandler;
-
-        //[SerializeField] private GameObject slotsFullMessage;
-        //[SerializeField] private GameObject noSlotMessage;
-        //[SerializeField] private GameObject notEnoughGemsPopup;
 
         private List<ChestModel> chests = new(); //Track spawned chest
         private ChestSubject subject;
@@ -99,7 +93,7 @@ namespace ChestSystem.Controller
                 if (slot.childCount == 0)
                     return i;
 
-                // If child is NOT a chest prefab (optional)
+                // If child is NOT a chest prefab 
                 bool hasChest = false;
                 foreach (Transform child in slot)
                 {

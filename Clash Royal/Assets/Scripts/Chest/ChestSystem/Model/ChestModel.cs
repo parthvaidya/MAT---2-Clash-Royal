@@ -1,3 +1,5 @@
+using ChestSystem.State;
+
 namespace ChestSystem.Model
 {
     public class ChestModel
@@ -6,6 +8,7 @@ namespace ChestSystem.Model
 
         public int generatedCoins;
         public int generatedGems;
+        public ChestStateMachine StateMachine { get; private set; }
 
         public System.TimeSpan unlockDuration; // chest takes to unlock
         public ChestState chestState = ChestState.Locked; //Current state of the chest
@@ -16,6 +19,12 @@ namespace ChestSystem.Model
         {
             generatedCoins = UnityEngine.Random.Range(chestData.minCoins, chestData.maxCoins);
             generatedGems = UnityEngine.Random.Range(chestData.minGems, chestData.maxGems);
+        }
+
+        public ChestModel()
+        {
+            StateMachine = new ChestStateMachine(this);
+            StateMachine.SetState(new LockedState());
         }
 
         //read-only property that tells how much time is left

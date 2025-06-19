@@ -1,8 +1,6 @@
 using ChestSystem.Model;
 using ChestSystem.Utility;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using ChestSystem.Controller;
 
 namespace ChestSystem.View

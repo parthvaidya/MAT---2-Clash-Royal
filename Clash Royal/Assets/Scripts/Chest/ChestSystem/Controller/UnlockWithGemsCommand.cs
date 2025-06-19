@@ -2,6 +2,7 @@ using UnityEngine;
 using ChestSystem.Model;
 using ChestSystem.View;
 using ChestSystem.Utility;
+using ChestSystem.State;
 
 namespace ChestSystem.Controller
 {
@@ -42,7 +43,8 @@ namespace ChestSystem.Controller
             }
 
             PlayerData.Instance.Gems -= usedGems; //If there are enough gems deduct them from the data 
-            chest.chestState = ChestState.Unlocked; // Update the chest state to unlocked
+            //chest.chestState = ChestState.Unlocked; // Update the chest state to unlocked
+            chest.StateMachine.SetState(new UnlockedState());
             playerUI.UpdateUI(); //Update the UI
         }
 
@@ -52,7 +54,8 @@ namespace ChestSystem.Controller
             PlayerData.Instance.Coins = prevCoins;
             PlayerData.Instance.Gems = prevGems;
 
-            chest.chestState = ChestState.Locked; //Revert back to unlocked
+            //chest.chestState = ChestState.Locked; //Revert back to unlocked
+            chest.StateMachine.SetState(new LockedState());
             playerUI.UpdateUI(); //Update UI
         }
     }
