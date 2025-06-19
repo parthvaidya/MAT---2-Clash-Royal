@@ -25,99 +25,141 @@ namespace ChestSystem.Controller
 
         public int playerGems = 100;
 
+        private bool[] occupiedSlots;
+
         void Awake()
         {
+            ServiceLocator.Register(this);
             subject = new ChestSubject(); //Initializes the ChestSubject which will notify observers
             ServiceLocator.Register(subject); //Registers it in a global ServiceLocator
+            occupiedSlots = new bool[chestSlotParent.childCount];
         }
 
-        //Spawn chest
+
         public void SpawnChest()
         {
             SoundManager.Instance.Play(Sounds.ButtonClick);
 
+            if (!CanSpawnChest())
+                return;
+
+            int emptySlotIndex = GetEmptySlotIndex();
+            if (emptySlotIndex == -1)
+            {
+                HandleNoSlotAvailable();
+                return;
+            }
+
+            ChestDataSO selectedChest = SelectChestToSpawn();
+            ChestModel newChest = CreateChestModel(selectedChest);
+
+            chests.Add(newChest);
+            occupiedSlots[emptySlotIndex] = true;
+            subject.Notify(newChest, emptySlotIndex);
+            
+        }
+
+
+        private bool CanSpawnChest()
+        {
             if (chests.Count >= maxSlots)
             {
                 SoundManager.Instance.Play(Sounds.Warning);
                 popupHandler.ShowSlotsFullMessage();
-                return;
+                return false;
             }
+            return true;
+        }
 
-            var emptySlotIndex = GetEmptySlotIndex();
-            if (emptySlotIndex == -1)
-            {
-                SoundManager.Instance.Play(Sounds.Warning);             
-                popupHandler.ShowNoSlotMessage();
-                return;
-            }
+        private void HandleNoSlotAvailable()
+        {
+            SoundManager.Instance.Play(Sounds.Warning);
+            popupHandler.ShowNoSlotMessage();
+        }
 
-            ChestDataSO selectedChest;
-
-            // Phase 1: Spawn each unique chest until all are used
+        private ChestDataSO SelectChestToSpawn()
+        {
             if (spawnedChestNames.Count < chestTypes.Length)
             {
-                List<ChestDataSO> unspawned = new(); // Get unspawned chest types
+                List<ChestDataSO> unspawned = new();
                 foreach (var chest in chestTypes)
                 {
                     if (!spawnedChestNames.Contains(chest.chestName))
                         unspawned.Add(chest);
                 }
 
-                selectedChest = unspawned[UnityEngine.Random.Range(0, unspawned.Count)];
-                spawnedChestNames.Add(selectedChest.chestName);
-            }
-            else
-            {
-                // Phase 2: Use fully random chests once all unique chests have appeared
-                selectedChest = chestTypes[UnityEngine.Random.Range(0, chestTypes.Length)];
+                var selected = unspawned[UnityEngine.Random.Range(0, unspawned.Count)];
+                spawnedChestNames.Add(selected.chestName);
+                return selected;
             }
 
-            //Creates a new ChestModel and generates coin/gem rewards randomly
-            var chestModel = new ChestModel
-            {
-                chestData = selectedChest,
-                unlockDuration = TimeSpan.FromMinutes(selectedChest.unlockTimeMinutes)
-            };
-
-            chestModel.GenerateRewards();
-            chests.Add(chestModel);
-            subject.Notify(chestModel, emptySlotIndex);
+            return chestTypes[UnityEngine.Random.Range(0, chestTypes.Length)];
         }
+
+        private ChestModel CreateChestModel(ChestDataSO chestData)
+        {
+            var model = new ChestModel
+            {
+                chestData = chestData,
+                unlockDuration = TimeSpan.FromMinutes(chestData.unlockTimeMinutes)
+            };
+            model.GenerateRewards();
+            return model;
+        }
+
+        //private int GetEmptySlotIndex()
+        //{
+        //    for (int i = 0; i < chestSlotParent.childCount; i++)
+        //    {
+        //        var slot = chestSlotParent.GetChild(i);
+
+        //        // Check if slot has only 1 child (the placeholder Image component, or the slot itself)
+        //        if (slot.childCount == 0)
+        //            return i;
+
+        //        // If child is NOT a chest prefab 
+        //        bool hasChest = false;
+        //        foreach (Transform child in slot)
+        //        {
+        //            if (child.CompareTag("ChestUI"))
+        //            {
+        //                hasChest = true;
+        //                break;
+        //            }
+        //        }
+
+        //        if (!hasChest)
+        //            return i;
+        //    }
+        //    return -1;
+        //}
 
         private int GetEmptySlotIndex()
         {
-            for (int i = 0; i < chestSlotParent.childCount; i++)
+            for (int i = 0; i < occupiedSlots.Length; i++)
             {
-                var slot = chestSlotParent.GetChild(i);
-
-                // Check if slot has only 1 child (the placeholder Image component, or the slot itself)
-                if (slot.childCount == 0)
-                    return i;
-
-                // If child is NOT a chest prefab 
-                bool hasChest = false;
-                foreach (Transform child in slot)
-                {
-                    if (child.CompareTag("ChestUI"))
-                    {
-                        hasChest = true;
-                        break;
-                    }
-                }
-
-                if (!hasChest)
+                if (!occupiedSlots[i])
                     return i;
             }
             return -1;
         }
 
         //Remove chest
+        //public void RemoveChest(ChestModel chest)
+        //{
+        //    if (chests.Contains(chest))
+        //    {
+        //        chests.Remove(chest);
+        //    }
+        //}
+
         public void RemoveChest(ChestModel chest)
         {
             if (chests.Contains(chest))
-            {
                 chests.Remove(chest);
-            }
+
+            if (chest.slotIndex >= 0 && chest.slotIndex < occupiedSlots.Length)
+                occupiedSlots[chest.slotIndex] = false;
         }
 
         //Check if any chest is unlocking
@@ -126,13 +168,7 @@ namespace ChestSystem.Controller
             return chests.Exists(c => c.chestState == ChestState.Unlocking);
         }
 
-        //Start the unlock timer
-        //public void StartUnlockTimer(ChestModel chest)
-        //{
-        //    chest.chestState = ChestState.Unlocking;
-        //    chest.unlockStartTime = System.DateTime.Now;
-        //}
-
+        
         public void StartUnlockTimer(ChestModel chest)
         {
             // Do nothing if the chest is already unlocking / unlocked

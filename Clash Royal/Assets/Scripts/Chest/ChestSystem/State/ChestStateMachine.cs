@@ -16,13 +16,8 @@ namespace ChestSystem.State
         public void SetState(IChestState newState)
         {
             if (newState == null) return;
-
             currentState = newState;
-
-            
-            Debug.Log($"StateMachine  {newState.GetType().Name}");
-
-            
+            Debug.Log($"StateMachine  {newState.GetType().Name}");            
             currentState.Enter(model);
         }
 

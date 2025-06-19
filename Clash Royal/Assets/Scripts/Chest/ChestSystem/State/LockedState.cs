@@ -7,20 +7,43 @@ namespace ChestSystem.State
 
     public class LockedState : IChestState
     {
+        //public void Enter(ChestModel model)
+        //{
+        //    model.chestState = ChestState.Locked;
+
+        //}
+
+        //public void Update(ChestModel model)
+        //{
+
+        //}
+
+        //public void OnChestTap(ChestModel model)
+        //{
+        //    Object.FindObjectOfType<ChestPopupView>()?.Show(model);
+        //}
+
+
+        private readonly ChestPopupView _popup;
+
+        public LockedState()
+        {
+            _popup = ServiceLocator.Get<ChestPopupView>();
+        }
+
         public void Enter(ChestModel model)
         {
             model.chestState = ChestState.Locked;
-            Debug.Log(" Enter LockedState");
         }
 
         public void Update(ChestModel model)
         {
-            // No update logic needed for Locked state
+            // No behavior needed
         }
 
         public void OnChestTap(ChestModel model)
         {
-            Object.FindObjectOfType<ChestPopupView>()?.Show(model);
+            _popup?.Show(model);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace ChestSystem.Model
 
         public int generatedCoins;
         public int generatedGems;
+        public int slotIndex;
         public ChestStateMachine StateMachine { get; private set; }
 
         public System.TimeSpan unlockDuration; // chest takes to unlock

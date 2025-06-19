@@ -21,6 +21,7 @@ namespace ChestSystem.View
 
         private void Start()
         {
+            ServiceLocator.Register(this);
             popupPanel.SetActive(false); //set popup as inactive
 
             //start timer to unlock chest

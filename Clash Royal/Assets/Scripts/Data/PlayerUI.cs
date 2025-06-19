@@ -11,6 +11,7 @@ public class PlayerUI : MonoBehaviour
    
     private void Start()
     {
+        ServiceLocator.Register(this);
         UpdateUI();
     }
  

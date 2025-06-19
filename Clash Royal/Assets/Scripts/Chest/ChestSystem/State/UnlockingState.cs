@@ -11,16 +11,7 @@ namespace ChestSystem.State
             model.unlockStartTime = DateTime.Now;
         }
 
-        //public void Update(ChestModel model)
-        //{
-        //    var timeLeft = model.unlockStartTime + model.unlockDuration - DateTime.Now;
-        //    //if (timeLeft.TotalSeconds <= 0)
-        //    if (DateTime.Now >= model.unlockStartTime + model.unlockDuration)
-
-        //    {
-        //        model.StateMachine.SetState(new UnlockedState());
-        //    }
-        //}
+        
         public void Update(ChestModel model)
         {
             if (System.DateTime.Now >= model.unlockStartTime + model.unlockDuration)
@@ -31,7 +22,7 @@ namespace ChestSystem.State
 
         public void OnChestTap(ChestModel model)
         {
-            // Maybe show a "wait" message or sound feedback here
+            
         }
     }
 }

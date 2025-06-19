@@ -672,6 +672,11 @@ MonoBehaviour:
   playerUI: {fileID: 228334037}
   popupHandler: {fileID: 94934999}
   playerGems: 100
+  chestSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &248898403
 Transform:
   m_ObjectHideFlags: 0
