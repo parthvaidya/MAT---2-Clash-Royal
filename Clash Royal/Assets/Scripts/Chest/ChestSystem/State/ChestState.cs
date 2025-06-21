@@ -1,4 +1,3 @@
-//States for chests
 public enum ChestState
 {
     Locked,
