@@ -5,14 +5,12 @@ namespace ChestSystem.Model
     public class ChestModel
     {
         public ChestDataSO chestData; //Initialize scriptable object
-
         public int generatedCoins;
         public int generatedGems;
         public int slotIndex;
         public ChestStateMachine StateMachine { get; private set; }
-
         public System.TimeSpan unlockDuration; // chest takes to unlock
-        public ChestState chestState = ChestState.Locked; //Current state of the chest
+        public ChestState chestState = ChestState.Locked; 
         public System.DateTime unlockStartTime; //Records the real-world time
 
         //Picks a random number of coins and gems within the defined range from the chest type

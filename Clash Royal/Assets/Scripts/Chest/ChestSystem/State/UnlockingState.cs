@@ -10,8 +10,7 @@ namespace ChestSystem.State
             model.chestState = ChestState.Unlocking;
             model.unlockStartTime = DateTime.Now;
         }
-
-        
+    
         public void Update(ChestModel model)
         {
             if (System.DateTime.Now >= model.unlockStartTime + model.unlockDuration)

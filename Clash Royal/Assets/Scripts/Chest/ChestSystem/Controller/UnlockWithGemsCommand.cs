@@ -1,4 +1,3 @@
-using UnityEngine;
 using ChestSystem.Model;
 using ChestSystem.View;
 using ChestSystem.Utility;
@@ -8,7 +7,7 @@ namespace ChestSystem.Controller
 {
     public class UnlockWithGemsCommand : ICommand
     {
-        //Initialize 
+        
         private ChestModel chest;
         private ChestController controller;
         private PlayerUI playerUI;
@@ -18,7 +17,6 @@ namespace ChestSystem.Controller
         private int prevCoins;
         private int prevGems;
 
-        //Initiaze the constructor
         public UnlockWithGemsCommand(ChestModel chest, ChestController controller, PlayerUI playerUI , UIPopupHandler popupHandler)
         {
             this.chest = chest;
@@ -32,7 +30,7 @@ namespace ChestSystem.Controller
             // Save original player data before changing
             prevCoins = PlayerData.Instance.Coins;
             prevGems = PlayerData.Instance.Gems;
-            usedGems = chest.chestData.gemCost; // how many gems required to unlock the chest
+            usedGems = chest.chestData.gemCost; 
 
             //Check if there are insufficient gems
             if (PlayerData.Instance.Gems < usedGems)
@@ -43,7 +41,6 @@ namespace ChestSystem.Controller
             }
 
             PlayerData.Instance.Gems -= usedGems; //If there are enough gems deduct them from the data 
-            //chest.chestState = ChestState.Unlocked; // Update the chest state to unlocked
             chest.StateMachine.SetState(new UnlockedState());
             playerUI.UpdateUI(); //Update the UI
         }
@@ -53,8 +50,6 @@ namespace ChestSystem.Controller
             // Restore exact previous values
             PlayerData.Instance.Coins = prevCoins;
             PlayerData.Instance.Gems = prevGems;
-
-            //chest.chestState = ChestState.Locked; //Revert back to unlocked
             chest.StateMachine.SetState(new LockedState());
             playerUI.UpdateUI(); //Update UI
         }

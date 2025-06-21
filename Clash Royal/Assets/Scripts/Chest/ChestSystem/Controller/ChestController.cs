@@ -34,8 +34,6 @@ namespace ChestSystem.Controller
             ServiceLocator.Register(subject); //Registers it in a global ServiceLocator
             occupiedSlots = new bool[chestSlotParent.childCount];
         }
-
-
         public void SpawnChest()
         {
             SoundManager.Instance.Play(Sounds.ButtonClick);
@@ -58,7 +56,6 @@ namespace ChestSystem.Controller
             subject.Notify(newChest, emptySlotIndex);
             
         }
-
 
         private bool CanSpawnChest()
         {
@@ -107,33 +104,6 @@ namespace ChestSystem.Controller
             return model;
         }
 
-        //private int GetEmptySlotIndex()
-        //{
-        //    for (int i = 0; i < chestSlotParent.childCount; i++)
-        //    {
-        //        var slot = chestSlotParent.GetChild(i);
-
-        //        // Check if slot has only 1 child (the placeholder Image component, or the slot itself)
-        //        if (slot.childCount == 0)
-        //            return i;
-
-        //        // If child is NOT a chest prefab 
-        //        bool hasChest = false;
-        //        foreach (Transform child in slot)
-        //        {
-        //            if (child.CompareTag("ChestUI"))
-        //            {
-        //                hasChest = true;
-        //                break;
-        //            }
-        //        }
-
-        //        if (!hasChest)
-        //            return i;
-        //    }
-        //    return -1;
-        //}
-
         private int GetEmptySlotIndex()
         {
             for (int i = 0; i < occupiedSlots.Length; i++)
@@ -144,15 +114,6 @@ namespace ChestSystem.Controller
             return -1;
         }
 
-        //Remove chest
-        //public void RemoveChest(ChestModel chest)
-        //{
-        //    if (chests.Contains(chest))
-        //    {
-        //        chests.Remove(chest);
-        //    }
-        //}
-
         public void RemoveChest(ChestModel chest)
         {
             if (chests.Contains(chest))
@@ -162,24 +123,19 @@ namespace ChestSystem.Controller
                 occupiedSlots[chest.slotIndex] = false;
         }
 
-        //Check if any chest is unlocking
         public bool IsAnyChestUnlocking()
         {
             return chests.Exists(c => c.chestState == ChestState.Unlocking);
         }
 
-        
         public void StartUnlockTimer(ChestModel chest)
         {
-            // Do nothing if the chest is already unlocking / unlocked
             if (chest.chestState != ChestState.Locked) return;
-
             chest.StateMachine.SetState(new UnlockingState());   
 
             
         }
 
-        //Try to unlock with chest
         public void TryUnlockWithGems(ChestModel chest)
         {
             var cmd = new UnlockWithGemsCommand(chest, this, playerUI , popupHandler);

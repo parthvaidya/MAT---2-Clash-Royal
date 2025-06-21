@@ -7,23 +7,6 @@ namespace ChestSystem.State
 
     public class LockedState : IChestState
     {
-        //public void Enter(ChestModel model)
-        //{
-        //    model.chestState = ChestState.Locked;
-
-        //}
-
-        //public void Update(ChestModel model)
-        //{
-
-        //}
-
-        //public void OnChestTap(ChestModel model)
-        //{
-        //    Object.FindObjectOfType<ChestPopupView>()?.Show(model);
-        //}
-
-
         private readonly ChestPopupView _popup;
 
         public LockedState()

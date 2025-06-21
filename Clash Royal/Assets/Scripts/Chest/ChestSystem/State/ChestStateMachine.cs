@@ -2,7 +2,6 @@ namespace ChestSystem.State
 {
     using ChestSystem.Model;
     using UnityEngine;
-
     public class ChestStateMachine
     {
         private IChestState currentState;
@@ -16,8 +15,7 @@ namespace ChestSystem.State
         public void SetState(IChestState newState)
         {
             if (newState == null) return;
-            currentState = newState;
-            Debug.Log($"StateMachine  {newState.GetType().Name}");            
+            currentState = newState;           
             currentState.Enter(model);
         }
 

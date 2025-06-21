@@ -1,7 +1,6 @@
 using ChestSystem.Model;
 using ChestSystem.Utility;
 using UnityEngine;
-using ChestSystem.Controller;
 
 namespace ChestSystem.View
 {
